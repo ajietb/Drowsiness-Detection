@@ -35,6 +35,7 @@ class drowsiness:
         self.kedip_value = 0
         self.total_time = 0
         self.kedip_state = False
+        self.get_data = False
         self.previous_time = time.time()
 
         self.record_path = "/home/ajietb/Supir ngantuk/drowsiness/dMEAR.csv"
@@ -154,10 +155,12 @@ class drowsiness:
                                                         self.d_index["{}".format(self.index[(2*l+1)+16])]))
                 except:
                     continue
-            
-            self.EAR_L = np.sum(self.left_ratio[0:-1])/(2*self.left_ratio[-1])
-            self.EAR_R = np.sum(self.right_ratio[0:-1])/(2*self.right_ratio[-1])
-            self.MEAR = (self.EAR_L+self.EAR_R)/2
+            try:
+                self.EAR_L = np.sum(self.left_ratio[0:-1])/(2*self.left_ratio[-1])
+                self.EAR_R = np.sum(self.right_ratio[0:-1])/(2*self.right_ratio[-1])
+                self.MEAR = (self.EAR_L+self.EAR_R)/2
+            except:
+                continue
 
             self.left_ratio = []
             self.right_ratio = []
@@ -174,7 +177,7 @@ class drowsiness:
             #=================================================================
 
             if len(self.raw_data) == 13:
-                if not self.detect:
+                if self.get_data:
                     self.new_row = {"F1":self.raw_data[0],
                                     "F2":self.raw_data[1],
                                     "F3":self.raw_data[2],
@@ -194,7 +197,7 @@ class drowsiness:
                     print("Saving Data to {}".format(self.record_path))
                     self.raw_data.pop(0)
                     self.raw_data.append(self.MEAR)
-                else:
+                elif self.detect:
                     self.data = np.expand_dims(np.array(self.raw_data), 0)
                     self.data_predict = self.model.predict(self.data)
                     print(np.argmax(self.data_predict))
@@ -226,7 +229,8 @@ class drowsiness:
                     
                     self.raw_data.pop(0)
                     self.raw_data.append(self.MEAR)
-
+                else:
+                    print("Get Data Paused")
             else:
                 self.raw_data.append(self.MEAR)
             
@@ -243,9 +247,23 @@ class drowsiness:
                         3, 
                         (0, 255, 0), 3)
             cv2.imshow('MediaPipe Face Mesh', self.image)
+            
+            self.wait = cv2.waitKey(1)
 
-            if cv2.waitKey(1) & 0xFF == ord('q'):
+            if self.wait & 0xFF == ord('q'):
                 break
+            
+            if self.wait == ord('o'):
+                self.get_data = True
+                self.detect = False
+            elif self.wait == ord('p'):
+                self.get_data = False
+                self.detect = False
+            elif self.wait == ord('d'):
+                self.detect = True
+                self.get_data = False
+            else:
+                pass
 
         self.cap.release()
                 

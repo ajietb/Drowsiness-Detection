@@ -159,6 +159,10 @@ class drowsiness:
                 self.EAR_L = np.sum(self.left_ratio[0:-1])/(2*self.left_ratio[-1])
                 self.EAR_R = np.sum(self.right_ratio[0:-1])/(2*self.right_ratio[-1])
                 self.MEAR = (self.EAR_L+self.EAR_R)/2
+                if self.MEAR>0.35:
+                    self.MEAR = 0.6
+                else:
+                    self.MEAR = 0.1
             except:
                 continue
 

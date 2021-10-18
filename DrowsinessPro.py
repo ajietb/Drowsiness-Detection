@@ -224,8 +224,8 @@ class drowsiness:
                         self.counter2 += 1
                         self.kedip_value += np.argmax(self.data_predict)
                     
-                    if self.counter2>15:
-                        if self.kedip_value>=9:
+                    if self.counter2>7:
+                        if self.kedip_value>=3:
                             self.kedip += 1 
                             self.counter2 = 0
                             self.kedip_value = 0

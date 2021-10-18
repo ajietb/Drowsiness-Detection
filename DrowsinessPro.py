@@ -40,7 +40,7 @@ class drowsiness:
 
         self.record_path = "/home/ajietb/Supir ngantuk/drowsiness/dMEAR.csv"
         self.sound_path = "/home/ajietb/Supir ngantuk/drowsiness/alarm.wav"
-        self.model_path = "/home/ajietb/Supir ngantuk/drowsiness/TSmodel.h5"
+        self.model_path = "/home/ajietb/Supir ngantuk/drowsiness/TSmodel (1).h5"
 
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_drawing_styles = mp.solutions.drawing_styles
@@ -62,7 +62,7 @@ class drowsiness:
 
         if not os.path.isfile(self.record_path):
             print("Create New Data MEAR")
-            self.record_df = pd.DataFrame(columns=["F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12","F13", "Label"])
+            self.record_df = pd.DataFrame(columns=["F1","F2","F3","F4","F5","F6","F7", "Label"])#,"F8","F9","F10","F11","F12","F13"
         else:
             print("Open Existing Data MEAR")
             self.record_df = pd.read_csv(self.record_path)
@@ -180,7 +180,7 @@ class drowsiness:
             self.y_vec = np.append(self.y_vec[1:],0.0)
             #=================================================================
 
-            if len(self.raw_data) == 13:
+            if len(self.raw_data) == 7:
                 if self.get_data:
                     self.new_row = {"F1":self.raw_data[0],
                                     "F2":self.raw_data[1],
@@ -189,12 +189,12 @@ class drowsiness:
                                     "F5":self.raw_data[4],
                                     "F6":self.raw_data[5],
                                     "F7":self.raw_data[6],
-                                    "F8":self.raw_data[7],
-                                    "F9":self.raw_data[8],
-                                    "F10":self.raw_data[9],
-                                    "F11":self.raw_data[10],
-                                    "F12":self.raw_data[11],
-                                    "F13":self.raw_data[12], 
+                                    # "F8":self.raw_data[7],
+                                    # "F9":self.raw_data[8],
+                                    # "F10":self.raw_data[9],
+                                    # "F11":self.raw_data[10],
+                                    # "F12":self.raw_data[11],
+                                    # "F13":self.raw_data[12], 
                                     "Label":"-"}
                     self.record_df = self.record_df.append(self.new_row, ignore_index=True)
                     self.record_df.to_csv(self.record_path, index=0)

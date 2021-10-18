@@ -205,16 +205,13 @@ class drowsiness:
                 elif self.detect:
                     self.data = np.expand_dims(np.array(self.raw_data), 0)
                     self.data_predict = self.model.predict(self.data)
-                    print(np.argmax(self.data_predict))
+                    # print(np.argmax(self.data_predict))
                     
                     if np.argmax(self.data_predict) == 2:
                         self.counter += 1
-                        if self.counter>5 and not self.sound_state or self.counter>50:
-                            if self.counter>50:
-                                self.counter = 0
-                                self.sound.stop()
+                        if self.counter>5 and not self.sound_state:
                             try:
-                                self.sound.play()
+                                self.sound.play(1000000000)
                             except:
                                 pass
                             self.sound_state = True

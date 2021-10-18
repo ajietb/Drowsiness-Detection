@@ -205,11 +205,11 @@ class drowsiness:
                 elif self.detect:
                     self.data = np.expand_dims(np.array(self.raw_data), 0)
                     self.data_predict = self.model.predict(self.data)
-                    # print(np.argmax(self.data_predict))
+                    print(np.argmax(self.data_predict))
                     
                     if np.argmax(self.data_predict) == 2:
                         self.counter += 1
-                        if self.counter>5 and not self.sound_state:
+                        if self.counter>3 and not self.sound_state:
                             try:
                                 self.sound.play(1000000000)
                             except:
@@ -281,6 +281,3 @@ if __name__ == "__main__":
                     min_track_conf = 0.5,
                     detect=False)
     ds.start()
-
-
-    

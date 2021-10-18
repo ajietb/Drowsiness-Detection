@@ -36,6 +36,7 @@ class drowsiness:
         self.total_time = 0
         self.kedip_state = False
         self.get_data = False
+        self.sound_state = False
         self.previous_time = time.time()
 
         self.record_path = "/home/ajietb/Supir ngantuk/drowsiness/dMEAR.csv"
@@ -208,15 +209,20 @@ class drowsiness:
                     
                     if np.argmax(self.data_predict) == 2:
                         self.counter += 1
-                        if self.counter >5:
+                        if self.counter>5 and not self.sound_state or self.counter>50:
+                            if self.counter>50:
+                                self.counter = 0
+                                self.sound.stop()
                             try:
                                 self.sound.play()
                             except:
                                 pass
+                            self.sound_state = True
                     else:
+                        self.sound_state = False
                         self.counter = 0
                         self.sound.stop()
-                    
+                        
                     if np.argmax(self.data_predict)==1 and not self.kedip_state:
                         self.kedip_state = True
                     
@@ -239,11 +245,11 @@ class drowsiness:
                 self.raw_data.append(self.MEAR)
             
             cv2.putText(self.image, 
-                            f'FPS: {int(1/self.delta_time)}', 
-                            (20, 70), 
-                            cv2.FONT_HERSHEY_PLAIN,
-                            3, 
-                            (0, 255, 0), 3)
+                        f'FPS: {int(1/self.delta_time)}', 
+                        (20, 70), 
+                        cv2.FONT_HERSHEY_PLAIN,
+                        3, 
+                        (0, 255, 0), 3)
             cv2.putText(self.image, 
                         f'Kedip: {int(self.kedip)}', 
                         (20, 120), 
